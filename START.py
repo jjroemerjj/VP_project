@@ -1,5 +1,7 @@
 # libraries to import
-from sympy import *
+from scipy.optimize import fsolve
+import math
+import numpy as np
 
 
 # ----------------------------------------------------------------
@@ -41,30 +43,54 @@ omega = 20
 I1 = AB
 I2 = BC
 I3 = CD
-I4 = B[0] - A[0]
-I5 = B[1] - A[1]
+I4 = np.linalg.norm(B[0] - A[0])
+I5 = np.linalg.norm(B[1] - A[1])
 
-# driving arm starting angle calculation
-fi1 = 45
+print(I4)
+print(I5)
 
-fi2 = Symbol('fi2', real=True)
-fi3 = Symbol('fi3', real=True)
-
-e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I5)
-p = solve([e1], fi2)
-
-p = list(p[0])
-
-print(type(p))
-print(p)
+# I4, I5 vectors angle definition
+fi4 = 180
+fi5 = 90
 
 
+# driving arm starting angle transformation to radians
+fi1 = math.radians(fi)
+fi4 = math.radians(fi4)
+fi5 = math.radians(fi5)
+
+
+def f(p):   # function defines system of equations
+    fi2, fi3 = p
+    e1 = I1*math.cos(fi1) + I2*math.cos(fi2) + I3*math.cos(fi3) + I4*math.cos(fi4) + I5*math.cos(fi5)
+    e2 = I1*math.sin(fi1) + I2*math.sin(fi2) + I3*math.sin(fi3) + I4*math.sin(fi4) + I5*math.sin(fi5)
+    return e1, e2
+
+
+s = fsolve(f, np.array([0, 0])) # solving system of equations
+s = getattr(s, "tolist", lambda: s)()   # convert to native python format (float)
+
+s[0] = math.degrees(s[0])   # converting angle from radians to degrees
+s[1] = math.degrees(s[1])
+
+if s[0] < 0:
+    s[0] = 360 - abs(s[0])
+
+if s[1] < 0:
+    s[1] = 360 - abs(s[1])
+
+print(s)
 
 
 
 
-#e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I3*cos(fi3) + I5)
-#e2 = Eq(I1*sin(fi1) + I2*sin(fi2) + I3*sin(fi3) + I4)
-#p = solve([e1, e2], fi2, fi3)
+'''
+def equations(p):
 
+    fi2, fi3 = p
+    e1 = I1*math.cos(fi1) + I2*math.cos(fi2) + I3*math.cos(fi3) + I5
+    e2 = I1*math.sin(fi1) + I2*math.sin(fi2) + I3*math.sin(fi3) + I4
+    return e1, e2
 
+s1, s2 = fsolve(equations,(0, 0))
+'''
