@@ -50,9 +50,21 @@ fi1 = 45
 fi2 = Symbol('fi2', real=True)
 fi3 = Symbol('fi3', real=True)
 
-e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I3*cos(fi3) + I5)
-e2 = Eq(I1*sin(fi1) + I2*sin(fi2) + I3*sin(fi3) + I4)
-p = solve([e1, e2], fi2, fi3)
+e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I5)
+p = solve([e1], fi2)
+
+p = list(p[0])
 
 print(type(p))
 print(p)
+
+
+
+
+
+
+#e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I3*cos(fi3) + I5)
+#e2 = Eq(I1*sin(fi1) + I2*sin(fi2) + I3*sin(fi3) + I4)
+#p = solve([e1, e2], fi2, fi3)
+
+
