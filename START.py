@@ -1,3 +1,7 @@
+# libraries to import
+from sympy import *
+
+
 # ----------------------------------------------------------------
 # Mechanism parameters - will be randomly changed each iteration
 # ----------------------------------------------------------------
@@ -33,4 +37,22 @@ omega = 20
 # I1cos(fi1) + I2cos(fi2) + I3cos(fi3) + I5 = 0
 # I1sin(fi1) + I2sin(fi2) + I3sin(fi3) + I4 = 0
 
-#
+# vector lengths calculation
+I1 = AB
+I2 = BC
+I3 = CD
+I4 = B[0] - A[0]
+I5 = B[1] - A[1]
+
+# driving arm starting angle calculation
+fi1 = 45
+
+fi2 = Symbol('fi2', real=True)
+fi3 = Symbol('fi3', real=True)
+
+e1 = Eq(I1*cos(fi1) + I2*cos(fi2) + I3*cos(fi3) + I5)
+e2 = Eq(I1*sin(fi1) + I2*sin(fi2) + I3*sin(fi3) + I4)
+p = solve([e1, e2], fi2, fi3)
+
+print(type(p))
+print(p)
