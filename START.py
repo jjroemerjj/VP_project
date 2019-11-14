@@ -82,15 +82,3 @@ if s[1] < 0:
 print(s)
 
 
-
-
-'''
-def equations(p):
-
-    fi2, fi3 = p
-    e1 = I1*math.cos(fi1) + I2*math.cos(fi2) + I3*math.cos(fi3) + I5
-    e2 = I1*math.sin(fi1) + I2*math.sin(fi2) + I3*math.sin(fi3) + I4
-    return e1, e2
-
-s1, s2 = fsolve(equations,(0, 0))
-'''
