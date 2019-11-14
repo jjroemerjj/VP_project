@@ -46,9 +46,6 @@ I3 = CD
 I4 = np.linalg.norm(B[0] - A[0])
 I5 = np.linalg.norm(B[1] - A[1])
 
-print(I4)
-print(I5)
-
 # I4, I5 vectors angle definition
 fi4 = 180
 fi5 = 90
