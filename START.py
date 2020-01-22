@@ -22,10 +22,10 @@ BE = 400
 fi = 45
 
 # driving arm angular velocity
-omega = 20
+omega = 90
 
 # ----------------------------------------------------------------
-# equation formulation
+# equation formulation - this section has to be commented
 # ----------------------------------------------------------------
 
 # general formula
@@ -38,6 +38,10 @@ omega = 20
 # general formula after simplification
 # I1cos(fi1) + I2cos(fi2) + I3cos(fi3) + I5 = 0
 # I1sin(fi1) + I2sin(fi2) + I3sin(fi3) + I4 = 0
+
+# ----------------------------------------------------------------
+
+
 
 # vector lengths calculation
 I1 = AB
@@ -56,6 +60,8 @@ fi1 = math.radians(fi)
 fi4 = math.radians(fi4)
 fi5 = math.radians(fi5)
 
+
+"""
 
 def f(p):   # function defines system of equations
     fi2, fi3 = p
@@ -77,5 +83,14 @@ if s[1] < 0:
     s[1] = 360 - abs(s[1])
 
 print(s)
+
+
+
+# ----------------------------------------------------------------
+# Joint C speed vector definition
+# ----------------------------------------------------------------
+
+
+"""
 
 
