@@ -2,6 +2,8 @@
 from scipy.optimize import fsolve
 import math
 import numpy as np
+from copy import deepcopy
+import matplotlib.pyplot as plt
 
 
 # ----------------------------------------------------------------
@@ -65,7 +67,7 @@ def f(p):
     e2 = I1*math.sin(fi1) + I2*math.sin(fi2) + I3*math.sin(fi3) + I4*math.sin(fi4) + I5*math.sin(fi5)
     return e1, e2
 
-
+"""
 # solving system of equations
 s = fsolve(f, np.array([0, 0]))
 
@@ -86,6 +88,8 @@ if s[1] < 0:
 print(type(s))
 print(s)
 
+"""
+
 
 # ----------------------------------------------------------------
 # Joint C position definition (vector)
@@ -100,4 +104,80 @@ print(s)
 # ----------------------------------------------------------------
 # Input vector definition
 # ----------------------------------------------------------------
+
+# Start/stop angle
+ss_angle = [0, 360]
+
+# Number of steps
+step_no = 360
+
+# Input vector (degrees)
+ff1 = [ss_angle[1]/step_no * x for x in range(step_no+1)]
+
+# Converting input vector into radians
+ff1 = [math.radians(x) for x in ff1]
+
+# Creating numpy array for arguments
+a = np.zeros((step_no+1, 5))
+a[:, 0] = ff1
+a[:, 3] = fi4
+a[:, 4] = fi5
+
+# creating array for x-y coordinates
+c = np.zeros((step_no+1, 2))
+
+
+# solving equations (in loop)
+for i in range(len(ff1)):
+    fi1 = a[i, 0]
+    s = fsolve(f, np.array([0, 0]))
+    # convert to native python format (float)
+    s = getattr(s, "tolist", lambda: s)()
+    a[i, 1] = s[1]
+    a[i, 2] = s[0]
+
+
+# Array of parameters in arc degrees (deep copy needed to obtain new object in memory)
+a_arc = deepcopy(a)
+
+# converting from radians to degrees
+for i in range(len(a_arc)):
+    for n in range(5):
+        a_arc[i, n] = math.degrees(a_arc[i, n])
+
+# Converting to positive-only angles
+for i in range(len(a_arc)):
+    for n in range(5):
+        if a_arc[i, n] < 0:
+            a_arc[i, n] = 360 - abs(a_arc[i, n])
+
+print(a_arc[45, :])
+
+
+# Function calculates x and y position of C joint
+def c_position(d):
+    f1, f2 = d
+    p_x = I1 * math.cos(f1) + I2 * math.cos(f2)
+    p_y = I1 * math.sin(f1) + I2 * math.sin(f2)
+    return p_x, p_y
+
+
+# New array of positive-only radian parameters
+a_rad = deepcopy(a_arc)
+for i in range(len(ff1)):
+    for n in range(5):
+        a_rad[i, n] = math.radians(a_rad[i, n])
+
+
+# Calculating c-coordinates for all parameters
+for i in range(len(c)):
+    c[i, :] = c_position([a_rad[i, 0], a[i, 1]])
+
+#print(c)
+print(type(c))
+
+
+plt.plot(c[:, 0], c[:, 1])
+
+
 
