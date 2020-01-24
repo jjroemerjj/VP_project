@@ -6,28 +6,33 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 
 
+# 0000000000000000000000000000000000000000000000000000000000000000
+# Task 1: write script which calculates 'fi2' and 'fi3' angles of the mechanism from the picture.
+# ................................................................
+
+
 # ----------------------------------------------------------------
-# Mechanism parameters - will be randomly changed each iteration
+# Mechanism parameters (dimensions and initial angles)
 # ----------------------------------------------------------------
 
-# bases coordinates
+# Bases coordinates
 A = [0, 200]
 B = [800, 0]
 
-# arms length
+# Arms length
 AB = 400
 BC = 800
 CD = 800
 BE = 400
 
-# driving arm starting angle
+# Driving arm starting angle (can be changed to any number)
 fi = 45
 
-# driving arm angular velocity
+# Driving arm angular velocity (for time based simulations)
 omega = 90
 
 # ----------------------------------------------------------------
-# equation formulation (this section has to be commented)
+# Equation formulation (this section has to be commented)
 # ----------------------------------------------------------------
 
 # general formula
@@ -43,36 +48,36 @@ omega = 90
 
 # ----------------------------------------------------------------
 
-# vector lengths calculation
+# Vector lengths calculation (for code clarity)
 I1 = AB
 I2 = BC
 I3 = CD
-I4 = np.linalg.norm(B[0] - A[0])
+I4 = np.linalg.norm(B[0] - A[0])    # calculated from bases coordinates
 I5 = np.linalg.norm(B[1] - A[1])
 
 # I4, I5 vectors angle definition
 fi4 = 180
 fi5 = 90
 
-# driving arm starting angle transformation to radians
+# Angles transformation from arc to radians
 fi1 = math.radians(fi)
 fi4 = math.radians(fi4)
 fi5 = math.radians(fi5)
 
 
-# function defines system of equations
+# Function defines system of equations
 def f(p):
     fi2, fi3 = p
     e1 = I1*math.cos(fi1) + I2*math.cos(fi2) + I3*math.cos(fi3) + I4*math.cos(fi4) + I5*math.cos(fi5)
     e2 = I1*math.sin(fi1) + I2*math.sin(fi2) + I3*math.sin(fi3) + I4*math.sin(fi4) + I5*math.sin(fi5)
     return e1, e2
 
-"""
-# solving system of equations
-s = fsolve(f, np.array([0, 0]))
 
-# convert to native python format (float)
-s = getattr(s, "tolist", lambda: s)()
+# Solving system of equations
+s = fsolve(f, np.array([0, 0]))  # np.array([0, 0]) defines input arguments (predicted solutions)
+
+print(type(s))  # All 'print' commands can be 'commented'.
+s = getattr(s, "tolist", lambda: s)()   # Convert to native python format (list)
 
 # converting angle from radians to degrees (s[0] = fi2, s[1] = fi3)
 s[0] = math.degrees(s[0])
@@ -85,12 +90,17 @@ if s[0] < 0:
 if s[1] < 0:
     s[1] = 360 - abs(s[1])
 
-print(type(s))
-print(s)
+# Final outcome
+fi2 = s[1]
+fi3 = s[0]
+
+print('The mechanism has following angles: fi1 = %d, fi2 = %d, fi3 = %d' % (fi, fi2, fi3))
+
+
+
+
 
 """
-
-
 # ----------------------------------------------------------------
 # Joint C position definition (vector)
 # ----------------------------------------------------------------
@@ -130,12 +140,13 @@ c = np.zeros((step_no+1, 2))
 # solving equations (in loop)
 for i in range(len(ff1)):
     fi1 = a[i, 0]
-    s = fsolve(f, np.array([0, 0]))
+    s = fsolve(f, np.array([0, 1]))
     # convert to native python format (float)
     s = getattr(s, "tolist", lambda: s)()
     a[i, 1] = s[1]
     a[i, 2] = s[0]
 
+print(a[40:50, :])
 
 # Array of parameters in arc degrees (deep copy needed to obtain new object in memory)
 a_arc = deepcopy(a)
@@ -151,7 +162,7 @@ for i in range(len(a_arc)):
         if a_arc[i, n] < 0:
             a_arc[i, n] = 360 - abs(a_arc[i, n])
 
-print(a_arc[45, :])
+print(a_arc[40:50, :])
 
 
 # Function calculates x and y position of C joint
@@ -173,11 +184,17 @@ for i in range(len(ff1)):
 for i in range(len(c)):
     c[i, :] = c_position([a_rad[i, 0], a[i, 1]])
 
-#print(c)
-print(type(c))
+
+plt.subplot(121)
+plt.plot(c[:, 0])
+plt.subplot(122)
+plt.plot(c[:, 1])
+plt.show()
 
 
-plt.plot(c[:, 0], c[:, 1])
+print(math.degrees(-1.8765116))
+print(math.degrees(0.37238136))
 
-
-
+"""
+"""
+"""
