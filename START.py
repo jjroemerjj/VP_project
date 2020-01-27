@@ -201,3 +201,10 @@ plt.subplot(122)
 plt.plot(c[:, 1])
 plt.show()
 # Compare obtained results with NX Motion (Figures 14 and 15)
+
+# At this point we have calculated relationship between fi1 angle and X and Y position of 'C' joint.
+# fsolve numerical function has been used to solve systems of equations
+# Used function is sensitive to changes in input arguments. Completely wrong results can be easily
+# obtained if function is used with incompetently
+
+# The second task is done
